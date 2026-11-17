@@ -59,6 +59,10 @@ python scripts/journal_downloader.py "&lt;url_or_doi&gt;" --bsk
 # 只列出候选附件，不下载
 python scripts/scansci_supp_downloader.py "&lt;url_or_doi&gt;" --list-only</code></pre>
 
+<h2 class="reveal"><span class="kicker">Video</span>视频介绍</h2>
+<div class="video reveal"><div class="embed"><iframe src="https://player.bilibili.com/player.html?bvid=BV1YtsF6nEsp&page=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true" title="journal-supp-downloader 本地安装与实战教程"></iframe></div>
+<p class="video-cap">【保姆级部署】journal-supp-downloader 本地安装与实战教程：自动抓取论文补充材料并转 Markdown · <a href="https://www.bilibili.com/video/BV1YtsF6nEsp/" target="_blank" rel="noopener">在 B 站观看 ↗</a></p></div>
+
 <h2 class="reveal"><span class="kicker">Releases</span>版本发布</h2>
 <div class="releases reveal">
 <div class="rel"><b>v1.10.0</b><time>2026-11-14</time><p>整合多轮全库与实测修复：直连网络隔离、多出版商正文与内嵌 JSON 提取、自动分级浏览器接管、Crossref 多出版商回退、Figshare / ScienceBase / GSA / DiVA 仓储扩展，以及 Playwright 与 MarkItDown 修复、个人敏感配置隔离。</p></div>
@@ -91,9 +95,6 @@ python scripts/scansci_supp_downloader.py "&lt;url_or_doi&gt;" --list-only</code
 <div class="faq reveal"><button>Q：下载的文件是 0 KB 或失败怎么办？ ▾</button><div class="ans">先确认该文献是否确实有附件；若提示 401 / 403，检查 IP 范围、用 --cdp 复用日常已登录浏览器，或更新 cookies.json。</div></div>
 <div class="faq reveal"><button>Q：无法解析 DOI 链接？ ▾</button><div class="ans">某些网络下 doi.org 会被屏蔽，脚本内置了 curl 回退与 Crossref 查询，仍失败时可直接传入期刊文章的真实 URL。</div></div>
 
-<h2 class="reveal"><span class="kicker">Video</span>视频介绍</h2>
-<div class="video reveal"><div class="embed"><iframe src="https://player.bilibili.com/player.html?bvid=BV1YtsF6nEsp&page=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true" title="journal-supp-downloader 本地安装与实战教程"></iframe></div>
-<p class="video-cap">【保姆级部署】journal-supp-downloader 本地安装与实战教程：自动抓取论文补充材料并转 Markdown · <a href="https://www.bilibili.com/video/BV1YtsF6nEsp/" target="_blank" rel="noopener">在 B 站观看 ↗</a></p></div>
 <p><a href="index.html">← 回首页</a> · <a href="zotero-table-extractor.html">看看另一个项目：Zotero Table Extractor →</a></p>
 <footer>完整安装与认证指南见 <a href="https://github.com/ZRyanX/journal-supp-downloader">GitHub README</a>。</footer>
 </main>
