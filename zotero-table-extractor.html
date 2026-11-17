@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Zotero Table Extractor — Ryan 的项目博客</title><link rel="stylesheet" href="style.css?v=20261115g"></head><body>
+<header class="topnav"><div class="inner"><a class="logo" href="index.html">Ryan Labs</a><span class="spacer"></span><a href="index.html">首页</a><a href="journal-supp-downloader.html">附表下载</a><a href="zotero-table-extractor.html">表格提取</a></div></header>
+<section class="hero small violet"><div class="inner">
+<p><a class="backlink" href="index.html">← 回首页</a></p>
+<span class="eyebrow">Table Extractor · Apache-2.0</span>
+<h1>📊 Zotero Table Extractor</h1>
+<p>学术文献与 Zotero 结构化表格全自动提取系统 · Python 3.9+ · Apache-2.0</p>
+<a class="btn" href="https://github.com/ZRyanX/zotero-table-extractor">GitHub 仓库 ↗</a><a class="btn ghost" href="https://github.com/ZRyanX/zotero-table-extractor/releases/tag/v1.9.7">v1.9.7 发布页 ↗</a><a class="btn ghost" href="#mirror">国内镜像下载 ↓</a>
+</div></section>
+<main class="wrap">
+<div class="stats reveal">
+<div class="stat"><b data-count="22">22</b><span>发布版本</span></div>
+<div class="stat"><b data-count="9">9</b><span>本地投票引擎（兜底）</span></div>
+<div class="stat"><b data-count="7">7</b><span>阶安全后处理</span></div>
+<div class="stat"><b data-count="3">3</b><span>权威在线直取源</span></div>
+</div>
+<p class="lead reveal">从 Zotero 选中条目、本地 PDF、期刊网页或 DOI 中自动定位、识别、核验并提取复杂科学表格，导出为出版级 Excel（.xlsx）。学术表格常有无边框 / 三线表、跨行跨列、多数值挤压、上下标与公差、多级复合表头、跨页续表等复杂排版，单一工具很容易串行、漏列或丢数据。这里的思路是：<strong>能在线高保真直取就绝不走 OCR；本地以 PaddleOCR 和 MinerU 结构化抽取为主，9 引擎投票与 TEDS 仲裁作兜底；复杂扫描件交给视觉 AI 接管</strong>。</p>
+<figure class="shot reveal"><img src="images/zte-pipeline.webp" alt="表格提取五步链路示意图" loading="lazy"><figcaption>提取链路：输入 → 在线直取 → 本地深度提取 → 质检 → 导出 Excel</figcaption></figure>
+
+<h2 class="reveal"><span class="kicker">Features</span>核心能力</h2>
+<div class="grid reveal">
+<div class="feat"><h3>🌐 在线 HTML / XML 直取</h3><p>arXiv 官方 HTML、NCBI PMC 开放获取 JATS XML、Elsevier XOCS XML（需 API Key）直取，覆盖 Wiley、Springer / Nature、Taylor &amp; Francis、ACS、MDPI、Frontiers 等多家出版商与知网专属适配；附表提取为有界集成，走 journal-supp-downloader。</p></div>
+<div class="feat"><h3>🗳️ MinerU 主抽取 · 9 引擎投票兜底</h3><p>原生 PDF 先走结构树快速通道 → MinerU 结构化主抽取 → 本地双向数值门禁；未覆盖或未通过时才回退到 9 引擎投票与 IBM TEDS 仲裁（共识阈值 ≥ 0.75，低于 0.90 触发视觉 AI 核验）。</p></div>
+<div class="feat"><h3>🤖 视觉 AI 接管</h3><p>RapidTable 快速救援 → DocLayout-YOLO + PP-DocLayoutV3 布局集成 / PP-StructureV3 切图 → PaddleOCR-VL-1.6 或 TeleOCR 重构 → IBM Docling 纯本地离线备用；并有防回归门禁，拒绝用更差的 OCR 结果替换原生表格。</p></div>
+<div class="feat"><h3>🧹 7 阶后处理</h3><p>A 直通保护、B 碎片过滤、C 表头 SMART 展平、D 多数值展开、E 公式注入防御、F 噪声与脚注隔离、G 表号规范化。</p></div>
+<div class="feat"><h3>🔗 跨页续表拼接</h3><p>MinerU 四路联合判定与断裂单元格合并，DeepDoc / MinerU 三路单调 DP 对齐，横向分块表格按行拼接；无法验证对应关系时保留独立片段、不硬拼。</p></div>
+<div class="feat"><h3>📈 出版级 Excel 导出</h3><p>富文本原生保真上下标，自适应列宽，表头主题与斑马纹，注入 Dublin Core 元数据。</p></div>
+</div>
+
+<h2 class="reveal"><span class="kicker">Pipeline</span>提取链路：从输入到 Excel</h2>
+<div class="steps reveal">
+<div class="step"><b>1 · 输入</b><p>Zotero 条目、本地 PDF、批量目录 / 清单、在线 URL / DOI。</p></div>
+<div class="step"><b>2 · 在线直取（优先）</b><p>arXiv HTML、PMC JATS XML、Elsevier XOCS XML 等权威源直取（arXiv 零 OCR 误差）；与 PDF 的声明清单逐项核对，缺失或截断的表由本地管线补齐后无损合并。</p></div>
+<div class="step"><b>3 · 本地 PDF 深度提取</b><p>结构树快速通道 → MinerU 结构化主抽取 → 本地双向数值门禁；未覆盖或未通过时回退 9 引擎投票 + TEDS 仲裁；扫描件与低置信度页走三阶段视觉 AI。</p></div>
+<div class="step"><b>4 · 质检与后处理</b><p>7 阶清洗、跨页拼接；OmniDocBench 标准化评测，LLM 语义门禁为可选项（<code>--enable-llm</code>，默认关闭）。</p></div>
+<div class="step"><b>5 · 导出与联动</b><p>出版级 Excel；可选挂回 Zotero 条目子附件并生成 Better-Notes 预览笔记。</p></div>
+</div>
+
+<h2 class="reveal"><span class="kicker">Quick Start</span>快速上手</h2>
+<pre><code>git clone https://github.com/ZRyanX/zotero-table-extractor.git
+cd zotero-table-extractor
+pip install -r requirements.txt
+playwright install chromium
+
+# 交互式配置向导（推荐）
+python setup_paths.py
+
+# 单篇 PDF 表格提取
+python scripts/extract_zotero_table.py --pdf "/path/to/paper.pdf" --output "/path/to/output_dir"
+
+# 在线文献 URL / DOI 提取
+python scripts/extract_zotero_table.py --pdf "https://doi.org/10.1016/j.oregeorev.2022.104949" --output "./output"
+
+# Zotero 全库一键批量提取
+python scripts/batch_run.py --db-path "~/Zotero/zotero.sqlite" --paper-tables "~/paper_tables" --workers 4 --resume</code></pre>
+
+<h2 class="reveal"><span class="kicker">Releases</span>版本发布</h2>
+<div class="releases reveal">
+<div class="rel"><b>v1.9.7</b><time>2026-11-15</time><p>Firecrawl OA 门控与降级解析优化，仅确认 OA 的文献才进入 Firecrawl 抓取，避免订阅文献无谓消耗额度。</p></div>
+<div class="rel"><b>v1.9.6</b><time>2026-11-14</time><p>主流出版社在线表格 DOM 适配、机构通行证与学术 API 多源协同、无头 / 有头 / CDP / 日常浏览器分层加载。</p></div>
+<div class="rel"><b>v1.9.5</b><time>2026-11-13</time><p>全流程审计修复与边界加固：远程 PDF、MinerU 子集页码重映射、旋转横表伪影抑制、Zotero WAL 并发安全读取等。</p></div>
+<div class="rel"><b>v1.9.4</b><time>2026-11-12</time><p>修复表格漏检误杀，重构多模态架构与开源组件集成，完善数据保真与后处理。</p></div>
+<div class="rel"><b>v1.9.3</b><time>2026-10-31</time><p>修复表格漏检、数据保真、MinerU 结果解析与导出可靠性问题。</p></div>
+<div class="rel"><b>v1.9.2</b><time>2026-10-19</time><p>集成 CDP 动态端口自愈探测、CDP Port Guard 反风控与跨进程槽位并发控制；测试 466 项。</p></div>
+<div class="rel"><b>v1.9.1</b><time>2026-10-18</time><p>集成 MinerU Open API CLI 双引擎调度、CDN 弹性 DoH 握手自愈；测试 439 项。</p></div>
+<div class="rel"><b>v1.9.0</b><time>2026-10-18</time><p>架构里程碑：MinerU 结构化主抽取替代盲目全量投票，本地双向数值门禁与跨表示坐标归一化；测试 419 项。</p></div>
+<div class="rel"><b>v1.8.2</b><time>2026-10-15</time><p>加固多页补漏流控、在线首行数据保留与开源生态契约对齐；测试 321 项。</p></div>
+<div class="rel"><b>v1.8.1</b><time>2026-10-12</time><p>全面修复表格漏检、数据误删、开源适配与评估缺陷；测试 313 项。</p></div>
+<div class="rel"><b>v1.8.0</b><time>2026-10-09</time><p>集成 RapidTable 双模型、PP-DocLayoutV3 双检融合、MinerU 跨页续表、OmniDocBench 评测、TeleOCR 容灾与 SMART 语义展平；测试 275 项。</p></div>
+<div class="rel"><b>v1.7.0</b><time>2026-10-08</time><p>引入 arXiv HTML 与 NCBI PMC 0% 误差直连、openpyxl 富文本上下标保真、PyMuPDF4LLM、IBM TEDS 仲裁与 olmOCR 尾注隔离。</p></div>
+<div class="rel"><b>v1.6.0</b><time>2026-10-06</time><p>引入 Docling 离线备用接管、7 引擎投票（GMFT 与 img2table）、DeepDoc / MinerU 跨页续表 DP 对齐与 PyZotero 联动。</p></div>
+<div class="rel"><b>v1.5.4</b><time>2026-10-03</time><p>集成 TurboOCR 页面方向模型，重构双轨两阶无损旋转自愈架构。</p></div>
+<div class="rel"><b>v1.5.3</b><time>2026-10-01</time><p>修复静默丢表、正则截断、付费墙误杀与多表覆盖漏检（15 项缺陷根治）。</p></div>
+<div class="rel"><b>v1.5.2</b><time>2026-10-01</time><p>移除长文档硬页数扫描限制，加固无标题多表对账与稀疏无框续表防御；测试 146 项。</p></div>
+<div class="rel"><b>v1.5.1</b><time>2026-09-29</time><p>修复漏检、OCR 同页误杀与多表聚类错误；测试 132 项。</p></div>
+<div class="rel"><b>v1.5.0</b><time>2026-09-28</time><p>升级至 DocLayout-YOLO 1280 高分辨率模型，加固双栏多表几何融合。</p></div>
+<div class="rel"><b>v1.4.0</b><time>2026-09-25</time><p>架构级效能升级：本地边缘切图优先、靶向 Table Crop VLM 增效、多云双活 MinerU 容灾、跨页大矩阵缝合强化。</p></div>
+<div class="rel"><b>v1.3.0</b><time>2026-09-21</time><p>提取引擎重构，深度集成 Firecrawl / pdf-inspector 语义解析套件。</p></div>
+<div class="rel"><b>v1.2.0</b><time>2026-09-18</time><p>技能在线安全更新机制与用户个人配置绝对保护系统。</p></div>
+<div class="rel"><b>v1.1.0</b><time>2026-09-16</time><p>架构加固与 23 项缺陷修复，引入单文件汇总导出与大模型智能自愈。</p></div>
+</div>
+
+<h2 class="reveal" id="mirror"><span class="kicker">Mirror</span>国内访问 · 镜像源</h2>
+<div class="mirror reveal">
+<p>大陆直接访问 GitHub 经常打不开或很慢，可以用下面的镜像下载最新版源码包（v1.9.7），内容与 GitHub 发布完全一致。Gitee / GitCode 暂无官方镜像，如需同步可从 GitHub 一键导入。</p>
+<a class="btn" href="https://gh-proxy.com/https://github.com/ZRyanX/zotero-table-extractor/archive/refs/tags/v1.9.7.zip">镜像下载 v1.9.7 .zip ↗</a>
+<a class="btn ghost" href="https://ghfast.top/https://github.com/ZRyanX/zotero-table-extractor/archive/refs/tags/v1.9.7.zip">备用镜像 ↗</a>
+<a class="btn ghost" href="https://cdn.jsdelivr.net/gh/ZRyanX/zotero-table-extractor@v1.9.7/README.md">jsDelivr 看 README ↗</a>
+<p class="dim">下载后解压，按上方快速上手安装。git clone 也可以走代理：<code>git clone https://gh-proxy.com/https://github.com/ZRyanX/zotero-table-extractor.git</code></p>
+</div>
+
+<h2 class="reveal"><span class="kicker">Video</span>视频介绍</h2>
+<div class="video reveal"><div class="embed"><iframe src="https://player.bilibili.com/player.html?bvid=BV1exsF6QEKK&page=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true" title="Zotero Table Extractor 本地部署与全库批跑实战"></iframe></div>
+<p class="video-cap">【保姆级部署】Zotero Table Extractor 本地部署与全库批跑实战：PDF 三线表一键提取为 Excel · <a href="https://www.bilibili.com/video/BV1exsF6QEKK/" target="_blank" rel="noopener">在 B 站观看 ↗</a></p></div>
+<p><a href="index.html">← 回首页</a> · <a href="journal-supp-downloader.html">看看另一个项目：Journal Supp Downloader →</a></p>
+<footer>完整安装与配置指南见 <a href="https://github.com/ZRyanX/zotero-table-extractor">GitHub README</a>。</footer>
+</main>
+<script src="script.js?v=20261115f"></script>
+</body></html>

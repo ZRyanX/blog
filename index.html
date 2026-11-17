@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ryan 的项目博客 — 让文献和附件里的表格轻松批量拿得到</title><link rel="stylesheet" href="style.css?v=20261115g"></head><body>
+<header class="topnav"><div class="inner"><a class="logo" href="index.html">Ryan Labs</a><span class="spacer"></span><a href="index.html">首页</a><a href="journal-supp-downloader.html">附表下载</a><a href="zotero-table-extractor.html">表格提取</a></div></header>
+<section class="hero"><div class="inner hero-grid">
+<div>
+<span class="eyebrow">Ryan Labs · 开源工具</span>
+<h1>让文献和附件里的表格<br><span class="grad">轻松批量拿得到</span></h1>
+<p>两个工具，一条完整链路：先把期刊附表批量下载下来，再把论文正文里的复杂表格高保真提取成 Excel。附表下载的目标是快速获取，表格提取的目标是结构与数字都不走样。</p>
+<a class="btn" href="#projects">看看两个项目 ↓</a><a class="btn ghost" href="https://github.com/ZRyanX">GitHub · ZRyanX ↗</a>
+</div>
+<div class="terminal" aria-label="使用示例">
+<span class="t-tag">示例</span>
+<div class="t-bar"><i></i><i></i><i></i><span>zsh — journal-supp-downloader</span></div>
+<div class="t-body"><span class="cmd">$ python scripts/journal_downloader.py "10.1016/j.oregeorev.2022.104949"</span>
+<span class="dim">▸ Tier 0 · Elsevier CDN 直连</span>
+<span class="ok">✓ S1.xlsx  2.4 MB</span>
+<span class="ok">✓ S2.xlsx  1.1 MB</span>
+<span class="ok">✓ S3.zip   8.7 MB</span>
+<span class="dim">▸ 完整性检查 · 核对表号与文件数</span>
+<span class="hl">Done — 3 个文件 · 0 漏检</span></div>
+</div>
+</div></section>
+<div class="marquee" aria-hidden="true"><div class="marquee-track"><span>Elsevier</span><span>Springer</span><span>Nature</span><span>Wiley</span><span>arXiv</span><span>PMC</span><span>知网</span><span>OpenAlex</span><span>Elsevier</span><span>Springer</span><span>Nature</span><span>Wiley</span><span>arXiv</span><span>PMC</span><span>知网</span><span>OpenAlex</span></div></div>
+<main class="wrap">
+<div class="stats reveal">
+<div class="stat"><b data-count="2">2</b><span>公开项目</span></div>
+<div class="stat"><b data-count="6">6</b><span>附表下载分级管线</span></div>
+<div class="stat"><b data-count="9">9</b><span>表格提取本地投票引擎</span></div>
+<div class="stat"><b data-count="7">7</b><span>表格提取后处理阶数</span></div>
+</div>
+
+<h2 id="projects" class="reveal"><span class="kicker">Projects</span>两个项目</h2>
+<p class="lead reveal">点卡片进入各自的详细介绍页。</p>
+<div class="grid">
+<article class="card reveal">
+<figure class="cover"><img src="images/jsd-cover.webp" alt="文献附表文件汇入文件夹的示意图" loading="lazy"></figure>
+<span class="tag">📥 附表下载</span><span class="tag">Python 3.11+</span>
+<h3><a href="journal-supp-downloader.html">Journal Supplementary Data Downloader</a></h3>
+<p>从 Elsevier、Springer、Nature、Wiley 等主流期刊自动识别并批量下载文献补充数据与附表（xlsx、xls、csv、zip、docx、pdf 等），分级管线层层兜底。</p>
+<p>✓ 分级管线：API → CDN → 页面 → 浏览器接管<br>✓ 复用日常浏览器登录态与机构 SSO<br>✓ 完整性检查，缺漏会明确提示</p>
+<a class="btn solid-blue" href="journal-supp-downloader.html">进入详情页 →</a>
+</article>
+<article class="card violet reveal">
+<figure class="cover"><img src="images/zte-cover.webp" alt="论文表格被提取为电子表格的示意图" loading="lazy"></figure>
+<span class="tag">📊 表格提取</span><span class="tag">Python 3.9+</span><span class="tag">Apache-2.0</span>
+<h3><a href="zotero-table-extractor.html">Zotero Table Extractor</a></h3>
+<p>学术文献与 Zotero 结构化表格提取系统：优先在线 HTML / XML 高保真直取，本地以 PaddleOCR 和 MinerU 结构化抽取为主、9 引擎投票与视觉 AI 兜底，导出出版级 Excel。</p>
+<p>✓ 在线直取，arXiv / PMC 零 OCR 误差<br>✓ MinerU 主抽取 + 9 引擎投票 + TEDS 仲裁<br>✓ 可选挂回 Zotero 条目与笔记（默认关闭）</p>
+<a class="btn solid-violet" href="zotero-table-extractor.html">进入详情页 →</a>
+</article>
+</div>
+
+<h2 class="reveal"><span class="kicker">Workflow</span>它们怎么配合</h2>
+<p class="lead reveal">一篇文献的数据，往往一部分在附表文件里，另外一部分在正文表格里。</p>
+<div class="steps reveal">
+<div class="step"><b>1 · 下载附表</b><p>用 Journal Supp Downloader 按 DOI 逐篇拿到 xlsx、csv、zip 等补充文件（多附件批量下载）。</p></div>
+<div class="step"><b>2 · 提取正文表格</b><p>用 Zotero Table Extractor 从 PDF 或出版商在线页面里提取正文表格，导出出版级 Excel。</p></div>
+<div class="step"><b>3 · 沉淀回 Zotero</b><p>提取结果可挂回对应文献条目，生成可预览的表格笔记（同步默认关闭，需手动开启）。</p></div>
+</div>
+
+<h2 class="reveal"><span class="kicker">Pipelines</span>两条链路，一眼看懂</h2>
+<p class="lead reveal">下载是六级兜底，提取是五步质检。点图进入详情页看完整说明。</p>
+<div class="pipelines reveal">
+<figure class="shot"><a href="journal-supp-downloader.html"><img src="images/jsd-pipeline.webp" alt="六级下载管线瀑布示意图" loading="lazy"></a><figcaption>六级下载管线 · 附表下载</figcaption></figure>
+<figure class="shot"><a href="zotero-table-extractor.html"><img src="images/zte-pipeline.webp" alt="表格提取五步链路示意图" loading="lazy"></a><figcaption>五步提取链路 · 表格提取</figcaption></figure>
+</div>
+
+<h2 class="reveal"><span class="kicker">Video</span>视频介绍</h2>
+<div class="video reveal"><div class="embed"><iframe src="https://player.bilibili.com/player.html?bvid=BV1vpsF69EeR&page=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true" title="开源科研套件：论文附表自动抓取 × 正文表格精准抽提"></iframe></div>
+<p class="video-cap">【开源科研套件】论文附表自动抓取 × 正文表格精准抽提，1+1&gt;2 打通文献数据闭环 · <a href="https://www.bilibili.com/video/BV1vpsF69EeR/" target="_blank" rel="noopener">在 B 站观看 ↗</a></p></div>
+
+<div class="cta reveal">
+<h2>把文献表格，提取成能直接用的数据文件</h2>
+<p>两个工具的代码都已公开，现在就能装上试试。表格提取采用 Apache-2.0 协议；附表下载暂未附许可证文件，见详情页说明。</p>
+<a class="btn" href="https://github.com/ZRyanX/journal-supp-downloader">附表下载 · GitHub ↗</a>
+<a class="btn ghost" href="https://github.com/ZRyanX/zotero-table-extractor">表格提取 · GitHub ↗</a>
+<p class="mirror-note">大陆访问 GitHub 不畅？<a href="journal-supp-downloader.html#mirror">附表下载镜像</a> · <a href="zotero-table-extractor.html#mirror">表格提取镜像</a></p>
+</div>
+
+<footer><span>公开项目 · 仓库见各详情页的 GitHub 链接</span><span>本站为静态页面，通过 Cloudflare Tunnel 对外提供</span></footer>
+</main>
+<script src="script.js?v=20261115f"></script>
+</body></html>

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Journal Supplementary Data Downloader — Ryan 的项目博客</title><link rel="stylesheet" href="style.css?v=20261115g"></head><body>
+<header class="topnav"><div class="inner"><a class="logo" href="index.html">Ryan Labs</a><span class="spacer"></span><a href="index.html">首页</a><a href="journal-supp-downloader.html">附表下载</a><a href="zotero-table-extractor.html">表格提取</a></div></header>
+<section class="hero small"><div class="inner">
+<p><a class="backlink" href="index.html">← 回首页</a></p>
+<span class="eyebrow">Supplementary Downloader · v1.10.0</span>
+<h1>📥 Journal Supplementary Data Downloader</h1>
+<p>文献附表与附件自动下载工具 · Python 3.11+ · 最新版本 v1.10.0</p>
+<a class="btn" href="https://github.com/ZRyanX/journal-supp-downloader">GitHub 仓库 ↗</a><a class="btn ghost" href="https://github.com/ZRyanX/journal-supp-downloader/releases/tag/v1.10.0">v1.10.0 发布页 ↗</a><a class="btn ghost" href="#mirror">国内镜像下载 ↓</a>
+</div></section>
+<main class="wrap">
+<div class="stats reveal">
+<div class="stat"><b data-count="6">6</b><span>下载策略层级</span></div>
+<div class="stat"><b>150s</b><span>单篇阶段预算（默认）</span></div>
+<div class="stat"><b>v1.10.0</b><span>最新版本</span></div>
+<div class="stat"><b>60s</b><span>浏览器接管预算（默认）</span></div>
+</div>
+<p class="lead reveal">从主流学术期刊网站（Elsevier ScienceDirect、SpringerLink、Nature、Wiley 等）自动识别并批量下载文章的补充数据 / 附表文件，如 xlsx、xls、csv、zip、docx、pdf 等。支持处理动态页面与复用浏览器认证会话。</p>
+<figure class="shot reveal"><img src="images/jsd-pipeline.webp" alt="六级下载管线瀑布示意图" loading="lazy"><figcaption>六级下载管线：一层不行，换下一层兜底</figcaption></figure>
+
+<h2 class="reveal"><span class="kicker">Features</span>核心能力</h2>
+<div class="grid reveal">
+<div class="feat"><h3>🪜 六级下载管线</h3><p>Tier A、Tier 0、Tier 1、Tier 2、Tier 3-Auto、Tier OA 六级兜底；Tier 3-Auto 内按 BrowserSkill → CDP → 有头浏览器自动接管；另有 Crossref 多出版商回退与 Figshare / ScienceBase / GSA / DiVA 仓储解析。</p></div>
+<div class="feat"><h3>🔍 智能过滤</h3><p>自动识别真实数据文件，排除插图、参考文献等干扰。</p></div>
+<div class="feat"><h3>📝 MarkItDown 副本</h3><p><code>--convert-markdown</code> 把附表转成 Markdown 副本，原始文件不受影响；支持多行合并表头展平与 zip 内表格递归转换，需另装 <code>requirements-conversion.txt</code>（.doc / .ppt 除外）。</p></div>
+<div class="feat"><h3>🗂️ 自动重命名归档</h3><p>用 Unpaywall / OpenAlex / CrossRef 查询文献标题，规范化命名文件夹。</p></div>
+<div class="feat"><h3>✅ 完整性检查</h3><p>核对文件数、S/A 表编号和每个补充区块，无法证明完整时会保留缺漏提示。</p></div>
+<div class="feat"><h3>🔐 多种认证</h3><p>Elsevier API Key、机构校园网 / InstToken、浏览器 Cookie 注入，复用已有登录态。</p></div>
+</div>
+
+<h2 class="reveal"><span class="kicker">Pipeline</span>下载链路：六级怎么兜底</h2>
+<div class="steps reveal">
+<div class="step"><b>Tier A · Elsevier API</b><p>极速，需 API 密钥与校园网 IP 或 InstToken。</p></div>
+<div class="step"><b>Tier 0 · Elsevier CDN 直连</b><p>无需认证，探测 <code>mmc*.xlsx/pdf/zip</code> 文件。</p></div>
+<div class="step"><b>Tier 1 · 期刊直接链接</b><p>基于 Requests 会话，带 Cookie 下载；自动修复中文文件名与 <code>.bin</code> 扩展名。</p></div>
+<div class="step"><b>Tier 2 · Scrapling 隐匿渲染</b><p>用于动态页面，自动拦截阻塞渲染的第三方挂起域名。</p></div>
+<div class="step"><b>Tier 3-Auto · 自动分级浏览器接管</b><p>遇 401 / 403 或 Cloudflare 拦截、或候选不完整时，在 60 秒接管预算与 150 秒阶段预算内按顺序尝试：已就绪的 BrowserSkill → 本地活动 Chrome（CDP）→ 独立有头浏览器。可用 <code>--no-bsk</code> 单独关闭 BrowserSkill 一路。</p></div>
+<div class="step"><b>Tier OA · 开放获取与仓储穿透</b><p>Unpaywall 与 OpenAlex（PMC / Europe PMC），以及 Figshare、ScienceBase、GSA、DiVA 深度解析。</p></div>
+</div>
+<p class="lead reveal">另外还有 Crossref 多出版商回退：主站无结果或无订阅权限时，自动尝试同一 DOI 的其他出版商。</p>
+
+<h2 class="reveal"><span class="kicker">Quick Start</span>快速上手</h2>
+<pre><code>pip install -r requirements.txt
+scrapling install
+
+# 轻量版：直接下载一篇文献的附表
+python scripts/journal_downloader.py "https://doi.org/10.1016/j.oregeorev.2022.104949"
+
+# 高级版：多级加速，适合 Elsevier / ScienceDirect 批量下载
+python scripts/scansci_supp_downloader.py "10.1016/j.oregeorev.2026.107349"
+
+# 复用日常浏览器登录态（CDP）
+python scripts/scansci_supp_downloader.py "&lt;url_or_doi&gt;" --cdp
+
+# 用 BrowserSkill 协同，免配调试端口
+python scripts/journal_downloader.py "&lt;url_or_doi&gt;" --bsk
+
+# 只列出候选附件，不下载
+python scripts/scansci_supp_downloader.py "&lt;url_or_doi&gt;" --list-only</code></pre>
+
+<h2 class="reveal"><span class="kicker">Releases</span>版本发布</h2>
+<div class="releases reveal">
+<div class="rel"><b>v1.10.0</b><time>2026-11-14</time><p>整合多轮全库与实测修复：直连网络隔离、多出版商正文与内嵌 JSON 提取、自动分级浏览器接管、Crossref 多出版商回退、Figshare / ScienceBase / GSA / DiVA 仓储扩展，以及 Playwright 与 MarkItDown 修复、个人敏感配置隔离。</p></div>
+<div class="rel"><b>v1.9.0</b><time>2026-11-13</time><p>修复三轮 50 篇实测发现的 P1 问题（PR #2），消除附表静默漏检。</p></div>
+<div class="rel"><b>v1.8.0</b><time>2026-11-12</time><p>修复代码审计发现的 8 项 P0 问题（PR #1），让“是否继续找”的判定信号可靠，统一下载落盘与完整性审计口径。</p></div>
+<div class="rel"><b>v1.7.0</b><time>2026-11-07</time><p>修复附表完整性误判、结果提前停止补查与浏览器下载恢复遗漏。</p></div>
+<div class="rel"><b>v1.6.0</b><time>2026-11-02</time><p>附表漏检深度根治；修复 Scrapling 超时单位与挂起 Bug；统一高校 WebVPN / CARSI / 登录态 Cookie 加载管道。</p></div>
+<div class="rel"><b>v1.5.0</b><time>2026-10-21</time><p>完善 BrowserSkill 会话复用、认证下载恢复与资源清理。</p></div>
+<div class="rel"><b>v1.4.0</b><time>2026-10-21</time><p>全面引入 Tencent BrowserSkill 原生适配，免调试端口复用日常浏览器登录态；测试扩充至 199 项。</p></div>
+<div class="rel"><b>v1.3.0</b><time>2026-10-16</time><p>架构升级，打通日常浏览器认证会话与极速下载管线，新增数据集格式支持与 Gzip 嗅探；测试 155 项。</p></div>
+<div class="rel"><b>v1.2.0</b><time>2026-10-15</time><p>稳定性与识别率提升，攻关 8 大漏检场景；测试 126 项。</p></div>
+<div class="rel"><b>v1.1.0</b><time>2026-10-10</time><p>引入 Tier OA（Unpaywall / OpenAlex）开放获取穿透与 MarkItDown 转换管道。</p></div>
+<div class="rel"><b>v1.0.3</b><time>2026-10-02</time><p>深度独立安全审计与多轮实测攻防验证后的重构加固；测试 83 项。</p></div>
+<div class="rel"><b>v1.0.2</b><time>2026-10-02</time><p>识别、提取、过滤、下载校验与完整性诊断的系统性修复（A1–F6 共 20 项）。</p></div>
+<div class="rel"><b>v1.0.1</b><time>2026-10-02</time><p>修复 3 个深度表格漏检与描述边界问题。</p></div>
+<div class="rel"><b>v1.0.0</b><time>2026-10-02</time><p>架构重构与能力升级，28 项回归测试集。</p></div>
+</div>
+
+<h2 class="reveal" id="mirror"><span class="kicker">Mirror</span>国内访问 · 镜像源</h2>
+<div class="mirror reveal">
+<p>大陆直接访问 GitHub 经常打不开或很慢，可以用下面的镜像下载最新版源码包（v1.10.0），内容与 GitHub 发布完全一致。Gitee / GitCode 暂无官方镜像，如需同步可从 GitHub 一键导入。</p>
+<a class="btn" href="https://gh-proxy.com/https://github.com/ZRyanX/journal-supp-downloader/archive/refs/tags/v1.10.0.zip">镜像下载 v1.10.0 .zip ↗</a>
+<a class="btn ghost" href="https://ghfast.top/https://github.com/ZRyanX/journal-supp-downloader/archive/refs/tags/v1.10.0.zip">备用镜像 ↗</a>
+<a class="btn ghost" href="https://cdn.jsdelivr.net/gh/ZRyanX/journal-supp-downloader@v1.10.0/README.md">jsDelivr 看 README ↗</a>
+<p class="dim">下载后解压，按上方快速上手安装。git clone 也可以走代理：<code>git clone https://gh-proxy.com/https://github.com/ZRyanX/journal-supp-downloader.git</code></p>
+</div>
+
+<h2 class="reveal"><span class="kicker">FAQ</span>常见问题</h2>
+<div class="faq reveal"><button>Q：提示 “No Cloudflare challenge found” 是出错了吗？ ▾</button><div class="ans">不是。这是正常提示，说明这次没有出现需要交互的 Cloudflare 验证，脚本已直接进入正常页面解析。</div></div>
+<div class="faq reveal"><button>Q：下载的文件是 0 KB 或失败怎么办？ ▾</button><div class="ans">先确认该文献是否确实有附件；若提示 401 / 403，检查 IP 范围、用 --cdp 复用日常已登录浏览器，或更新 cookies.json。</div></div>
+<div class="faq reveal"><button>Q：无法解析 DOI 链接？ ▾</button><div class="ans">某些网络下 doi.org 会被屏蔽，脚本内置了 curl 回退与 Crossref 查询，仍失败时可直接传入期刊文章的真实 URL。</div></div>
+
+<h2 class="reveal"><span class="kicker">Video</span>视频介绍</h2>
+<div class="video reveal"><div class="embed"><iframe src="https://player.bilibili.com/player.html?bvid=BV1YtsF6nEsp&page=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true" title="journal-supp-downloader 本地安装与实战教程"></iframe></div>
+<p class="video-cap">【保姆级部署】journal-supp-downloader 本地安装与实战教程：自动抓取论文补充材料并转 Markdown · <a href="https://www.bilibili.com/video/BV1YtsF6nEsp/" target="_blank" rel="noopener">在 B 站观看 ↗</a></p></div>
+<p><a href="index.html">← 回首页</a> · <a href="zotero-table-extractor.html">看看另一个项目：Zotero Table Extractor →</a></p>
+<footer>完整安装与认证指南见 <a href="https://github.com/ZRyanX/journal-supp-downloader">GitHub README</a>。</footer>
+</main>
+<script src="script.js?v=20261115f"></script>
+</body></html>
