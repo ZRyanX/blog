@@ -4,16 +4,16 @@
 <header class="topnav"><div class="inner"><a class="logo" href="index.html">Ryan Labs</a><span class="spacer"></span><a href="index.html">首页</a><a href="journal-supp-downloader.html">附表下载</a><a href="zotero-table-extractor.html">表格提取</a></div></header>
 <section class="hero small"><div class="inner">
 <p><a class="backlink" href="index.html">← 回首页</a></p>
-<span class="eyebrow">Supplementary Downloader · v1.10.0</span>
+<span class="eyebrow">Supplementary Downloader · v1.11.0</span>
 <h1>📥 Journal Supplementary Data Downloader</h1>
-<p>文献附表与附件自动下载工具 · Python 3.11+ · Apache-2.0 · 最新版本 v1.10.0</p>
-<a class="btn" href="https://github.com/ZRyanX/journal-supp-downloader">GitHub 仓库 ↗</a><a class="btn ghost" href="https://github.com/ZRyanX/journal-supp-downloader/releases/tag/v1.10.0">v1.10.0 发布页 ↗</a><a class="btn ghost" href="#mirror">国内镜像下载 ↓</a>
+<p>文献附表与附件自动下载工具 · Python 3.11+ · Apache-2.0 · 最新版本 v1.11.0</p>
+<a class="btn" href="https://github.com/ZRyanX/journal-supp-downloader">GitHub 仓库 ↗</a><a class="btn ghost" href="https://github.com/ZRyanX/journal-supp-downloader/releases/tag/v1.11.0">v1.11.0 发布页 ↗</a><a class="btn ghost" href="#mirror">国内镜像下载 ↓</a>
 </div></section>
 <main class="wrap">
 <div class="stats reveal">
 <div class="stat"><b data-count="6">6</b><span>下载策略层级</span></div>
 <div class="stat"><b>150s</b><span>单篇阶段预算（默认）</span></div>
-<div class="stat"><b>v1.10.0</b><span>最新版本</span></div>
+<div class="stat"><b>v1.11.0</b><span>最新版本</span></div>
 <div class="stat"><b>60s</b><span>浏览器接管预算（默认）</span></div>
 </div>
 <p class="lead reveal">从主流学术期刊网站（Elsevier ScienceDirect、SpringerLink、Nature、Wiley 等）自动识别并批量下载文章的补充数据 / 附表文件，如 xlsx、xls、csv、zip、docx、pdf 等。支持处理动态页面与复用浏览器认证会话。</p>
@@ -65,6 +65,7 @@ python scripts/scansci_supp_downloader.py "&lt;url_or_doi&gt;" --list-only</code
 
 <h2 class="reveal"><span class="kicker">Releases</span>版本发布</h2>
 <div class="releases reveal">
+<div class="rel"><b>v1.11.0</b><time>2026-11-18</time><p>兼容升级 scansci-pdf v1.21.0、机构通道/Elsevier 代理诊断与 OpenAIRE 回退</p></div>
 <div class="rel"><b>v1.10.0</b><time>2026-11-14</time><p>整合多轮全库与实测修复：直连网络隔离、多出版商正文与内嵌 JSON 提取、自动分级浏览器接管、Crossref 多出版商回退、Figshare / ScienceBase / GSA / DiVA 仓储扩展，以及 Playwright 与 MarkItDown 修复、个人敏感配置隔离。</p></div>
 <div class="rel"><b>v1.9.0</b><time>2026-11-13</time><p>修复三轮 50 篇实测发现的 P1 问题（PR #2），消除附表静默漏检。</p></div>
 <div class="rel"><b>v1.8.0</b><time>2026-11-12</time><p>修复代码审计发现的 8 项 P0 问题（PR #1），让“是否继续找”的判定信号可靠，统一下载落盘与完整性审计口径。</p></div>
@@ -83,10 +84,10 @@ python scripts/scansci_supp_downloader.py "&lt;url_or_doi&gt;" --list-only</code
 
 <h2 class="reveal" id="mirror"><span class="kicker">Mirror</span>国内访问 · 镜像源</h2>
 <div class="mirror reveal">
-<p>大陆直接访问 GitHub 经常打不开或很慢，可以用下面的镜像下载最新版源码包（v1.10.0），内容与 GitHub 发布完全一致。Gitee / GitCode 暂无官方镜像，如需同步可从 GitHub 一键导入。</p>
-<a class="btn" href="https://gh-proxy.com/https://github.com/ZRyanX/journal-supp-downloader/archive/refs/tags/v1.10.0.zip">镜像下载 v1.10.0 .zip ↗</a>
-<a class="btn ghost" href="https://ghfast.top/https://github.com/ZRyanX/journal-supp-downloader/archive/refs/tags/v1.10.0.zip">备用镜像 ↗</a>
-<a class="btn ghost" href="https://cdn.jsdelivr.net/gh/ZRyanX/journal-supp-downloader@v1.10.0/README.md">jsDelivr 看 README ↗</a>
+<p>大陆直接访问 GitHub 经常打不开或很慢，可以用下面的镜像下载最新版源码包（v1.11.0），内容与 GitHub 发布完全一致。Gitee / GitCode 暂无官方镜像，如需同步可从 GitHub 一键导入。</p>
+<a class="btn" href="https://gh-proxy.com/https://github.com/ZRyanX/journal-supp-downloader/archive/refs/tags/v1.11.0.zip">镜像下载 v1.11.0 .zip ↗</a>
+<a class="btn ghost" href="https://ghfast.top/https://github.com/ZRyanX/journal-supp-downloader/archive/refs/tags/v1.11.0.zip">备用镜像 ↗</a>
+<a class="btn ghost" href="https://cdn.jsdelivr.net/gh/ZRyanX/journal-supp-downloader@v1.11.0/README.md">jsDelivr 看 README ↗</a>
 <p class="dim">下载后解压，按上方快速上手安装。git clone 也可以走代理：<code>git clone https://gh-proxy.com/https://github.com/ZRyanX/journal-supp-downloader.git</code></p>
 </div>
 
